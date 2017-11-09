@@ -1,0 +1,252 @@
+<!doctype html>
+<head>
+
+<link rel="stylesheet" href="bootstrap/bootstrap.css">
+<link rel="stylesheet" href="bootstrap/bootstrap.min.css">
+<link rel="stylesheet" href="bootstrap/bootstrap-responsive.css">
+<link rel="stylesheet" href="bootstrap/bootstrap-responsive.min.css">
+<link rel="stylesheet" href="bootstrap/customized.css" />
+<link rel="stylesheet" href="bootstrap/font-awesome.min.css" />
+	<title></title>
+
+	<script src="js/angular.min.js"></script>
+	<script src="js/jquery-3.1.0.min.js"></script>
+</head>
+<body>
+<script src="js/controller.js"></script>
+<div ng-app="myApp" ng-controller="myCtrl" class="container">
+<h1>University</h1>
+<table>
+<tr><td>
+          
+		  <select ng-model="selectnew" class="glyphicon glyphicon-user">
+					   <option value="Person">Person</option>
+					   <option value='Classlist'>Classlist</option>
+                    </select>
+						</td>
+					<td>
+					<div class="col-xs-12 col-sm-6 col-md-6 columns">	
+					<label class="form-elem" >Search<input type="text" ng-model="search" ng-change="srch()"></label>
+					</div>
+					</td>
+					</tr>
+				</table>
+					<br>
+					
+					
+					<button type="button" ng-click="createnew()"class="add-btn btn btn-success">
+                     Create
+                    </button>
+					
+					<button type="button" ng-click="view()"class="add-btn btn btn-info move">
+                     View
+					 </button>
+                    
+					
+					
+					
+				<div id="classlist" style="display:none;" class="row" style="margin: 0">
+				<table class="table">
+				
+				<legend>New Class</legend>
+					<tr>
+					<td>
+					<div class="col-xs-12 col-sm-6 col-md-6 columns">	
+					<label class="form-elem" >Class Name</label>
+				    <input  ng-model="c.name" class="form-control" type="text" maxlength="15">
+				    </div>
+					</td>
+					
+					<td>
+					<div class="col-xs-12 col-sm-6 col-md-6 columns">	
+					<label class="form-elem" >Limit</label>
+				    <input  ng-change="expandlist()" ng-model="c.limit" class="form-control" type="number" min="{{c.size}}" max="50" >
+				    </div>
+					</td>
+						<td>
+					<div class="col-xs-12 col-sm-6 col-md-6 columns">	
+					<label class="form-elem" >Professor</label>
+				    <select id="proff" ng-model="c.professor">
+					<option ng-repeat="x in type[1]" value="{{x}}">{{data[x].name}}</option>
+					</select>
+				    </div>				
+					</td>
+					
+					<td>
+					<div class="col-xs-12 col-sm-6 col-md-6 columns">	
+					<label class="form-elem" >Students </label>
+					<div id="ScrollCB1" class="scroll-select form-control form-elem" >
+					<table>
+					<tr ng-repeat="x in type[0]">
+					<td>
+					<input class="checkbox" type="checkbox" ng-click="studclass($index)" value="{{x}}">
+					{{data[x].name}}
+					</td>
+					<tr>
+					</table>
+				    </div>	
+					</div>
+					</td>
+					<td>
+					<div class="col-xs-12 col-sm-6 col-md-6 columns">	
+					<label class="form-elem" >Size</label>
+				    <p>{{c.size}}/{{c.limit}}</p>
+				    </div>
+					</td>
+					</tr>
+					</table>
+					<button type="submit"  ng-click="addclass()" class="btn btn-success">submit</button>	
+					<button type="submit" ng-click="hide()" class="btn btn-danger">cancel</button>							
+						
+				</div>
+				
+				
+					<div id="person" style="display:none;" class="row" style="margin: 0">
+								<legend>New Student</legend>
+								<table class="table" >
+									<tr>
+									<td>
+									<div class="col-xs-12 col-sm-12 col-md-12 columns" style="margin-top: 10px">
+											<div class="col-xs-12 col-sm-6 col-md-6 columns">	
+												<label class="form-elem" >Firstname</label>
+												<input  ng-model="n.firstname" class="form-control" type="text" maxlength="15">
+				                            	</div></td>
+												
+												<td><div class="col-xs-12 col-sm-6 col-md-6 columns">	
+												<label class="form-elem" >Lastname</label>
+												<input ng-model="n.lastname" class="form-control" type="text" maxlength="15">
+				                            	</div></td>
+												
+												
+												 <td><div class="col-xs-12 col-sm-6 col-md-6 columns">	
+												<label class="form-elem" for="profile-gender">Gender *</label>
+				                                <select   ng-model="n.gender" required="">
+				                                  <option value="" disabled="" default="" selected="" style="display:none;"></option>
+				                                  <option value="MALE">MALE</option>
+				                                  <option value="FEMALE">FEMALE</option>
+				                                </select>
+												</div></td>
+												 </div>
+												 
+												<td><div class="col-xs-12 columns">
+												<label class="form-elem" >Year Started</label>
+												<input ng-model="n.datestarted" class="form-control" type="number" min="1994" max="2016">
+				                            	</div></td>
+												</tr>
+												<tr>
+												<td><div class="col-xs-12 columns">
+												<label class="form-elem" >Date of Birth</label>
+												<input ng-model="n.dateofbirth" class="form-control" type="date">
+												</div></td>
+												 <td>
+												<div class="col-xs-12 columns">
+												<label class="form-elem" >Type</label>
+												<select ng-click="showcourse()" ng-model="n.type">
+												<option value="STUDENT">STUDENT</option>
+												<option valye="PROFESSOR">PROFESSOR</option>
+												</select>
+												</div></td>
+												
+												<td>
+												 <div class="col-xs-12 col-sm-6 col-md-6 columns">
+												<label class="form-elem" >Department</label>
+												<select id="department"ng-model="n.department" ng-click="getcourse()">
+												<option></option>
+												<option value="ARTS AND SCIENCES">ARTS AND SCIENCES</option>
+												<option value="CAFFA">CAFFA</option>
+												<option value="ENGINEERING">ENGINEERING</option>
+												<option value="LAW AND ECONOMICS">LAW AND ECONOMICS</option>
+												<option value="MATH AND COMPUTER SCIENCE">MATH AND COMPUTER SCIENCE</option>
+												</select>
+				                            	</div>
+												</td>
+												 
+												<td id="course">
+												<div  class="col-xs-12 col-sm-6 col-md-6 columns">
+												<label class="form-elem" >Course</label>
+												<select id="incourse" ng-model="n.course">
+												</select>
+				                            	</div>
+												</td>
+												
+											
+												</tr>
+											</table>
+											<button id="update" type="button" ng-click="update($index)" class="table-btn btn btn-info move" style="display:none;">
+											update</button>
+											<button id="submitnew" type="submit" ng-click="add()" class="btn btn-success">submit</button>	
+											<button type="submit" ng-click="hide()" class="btn btn-danger">cancel</button>	
+											
+				</div>
+				
+
+										<br>
+								
+			
+					
+<table id="Person" class="table">
+<thead>
+<tr>
+<th>Firstname</th>
+<th>Lastname</th>
+<th>Gender</th>
+<th>Type</th>
+<th>Course</th>
+<th>Department</th>
+<th>Date Started</th>
+<th>Date of Birth</th>
+<th>Edit</th>
+<th>Delete</th>
+</tr>
+</thead>
+<tbody>
+<tr class="students" ng-repeat="index in data">
+<td>{{index.firstname}}</td>
+<td>{{index.lastname}}</td>
+<td>{{index.gender}}</td>
+<td>{{index.type}}</td>
+<td>{{index.course}}</td>
+<td>{{index.department}}</td>
+<td>{{index.datestarted}}</td>
+<td>{{index.dateofbirth}}</td>
+<td><button  ng-click="edit($index)" class="table-btn btn btn-success add">Edit</button></td>
+<td ><button ng-click="del($index)" class="table-btn btn btn-danger remove">Delete</button></td>
+</tr>
+</tbody>
+</table>
+
+<table id="Classlist" class="table" style="display:none">
+<thead>
+<tr>
+<th>Name</th>
+<th>Limit</th>
+<th>Size</th>
+<th>Professor</th>
+<th>Students</th>
+</tr>
+</thead>
+<tbody>
+<tr class="classlist" ng-repeat="x in cdata">
+<td>{{x.name}}</td>
+<td>{{x.limit}}</td>
+<td>{{x.size}}</td>
+<td>{{x.profname}}</td>
+<td>
+<button ng-click="viewstudents($index)" class="add-btn btn btn-info move">
+View Students
+</button>
+<div id="{{x._id}}" style="display:none;" class="scroll-select form-control form-elem">
+<p ng-repeat ="y in x.studnames" >{{y}}</p><br>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+
+<script type="text/javascript">
+
+</script>
+</body>
+</html>
