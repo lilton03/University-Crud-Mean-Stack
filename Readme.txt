@@ -1,4 +1,4 @@
-A simple crude application built sample code built on MEAN stack.
+A simple crud application built sample code built on MEAN stack.
 
 M- monggo db
 
